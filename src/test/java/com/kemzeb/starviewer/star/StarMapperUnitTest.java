@@ -12,7 +12,7 @@ public class StarMapperUnitTest {
     // Given
     Star star = new Star();
     star.setName("test");
-    star.setDistanceParsecs("10.12");
+    star.setDistanceParsecs(10.12);
     star.setSpectralType("G3V");
 
     // When

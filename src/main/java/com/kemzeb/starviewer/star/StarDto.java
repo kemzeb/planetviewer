@@ -1,6 +1,7 @@
 package com.kemzeb.starviewer.star;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +15,6 @@ import org.springframework.hateoas.server.core.Relation;
 public class StarDto extends RepresentationModel<StarDto> {
 
   @NotBlank private String name;
-  @NotBlank private String distanceParsecs;
-  @NotBlank private String spectralType;
+  @NotNull private Double distanceParsecs;
+  private String spectralType;
 }

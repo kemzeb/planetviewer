@@ -2,7 +2,7 @@ package com.kemzeb.starviewer.star;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Entity
@@ -13,8 +13,8 @@ public class Star {
   @Id private String name;
 
   /** Distance from Earth to the system measured in parsecs. */
-  @NotBlank private String distanceParsecs;
+  @NotNull private Double distanceParsecs;
 
   /** The stellar classification. */
-  @NotBlank private String spectralType;
+  private String spectralType;
 }

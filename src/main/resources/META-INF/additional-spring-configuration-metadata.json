@@ -1,0 +1,14 @@
+{
+    "properties": [
+        {
+            "name": "starviewer.mission-stars-exocat-json-filename",
+            "type": "java.lang.String",
+            "description": "Filename of \"Mission Stars and Exocat\" archive stored in resources/."
+        },
+        {
+            "name": "starviewer.should-cli-runner-run",
+            "type": "java.lang.Boolean",
+            "description": "Boolean that determines if commnand line runners should run (used for tests)."
+        }
+    ]
+}
