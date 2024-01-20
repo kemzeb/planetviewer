@@ -17,7 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class StarServiceUnitTest {
 
   @InjectMocks private StarService underTest;
-  @Mock private StarMapper starMapper;
+  @Mock private StarAssembler starAssembler;
   @Mock private StarRepository starRepository;
 
   @Test
@@ -40,7 +40,7 @@ public class StarServiceUnitTest {
 
     // When
     when(starRepository.findById(name)).thenReturn(Optional.of(star));
-    when(starMapper.toStarDto(any())).thenReturn(new StarDto());
+    when(starAssembler.toModel(any())).thenReturn(new StarDto());
 
     StarDto dto = underTest.findStar(name);
 
