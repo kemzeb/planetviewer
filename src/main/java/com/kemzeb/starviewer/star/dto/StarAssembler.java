@@ -1,7 +1,9 @@
-package com.kemzeb.starviewer.star;
+package com.kemzeb.starviewer.star.dto;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
+import com.kemzeb.starviewer.star.Star;
+import com.kemzeb.starviewer.star.StarRestController;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import org.springframework.beans.factory.annotation.Autowired;

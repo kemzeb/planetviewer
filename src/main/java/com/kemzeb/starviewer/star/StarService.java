@@ -1,6 +1,8 @@
 package com.kemzeb.starviewer.star;
 
 import com.kemzeb.starviewer.exception.StarNotFoundException;
+import com.kemzeb.starviewer.star.dto.StarAssembler;
+import com.kemzeb.starviewer.star.dto.StarDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

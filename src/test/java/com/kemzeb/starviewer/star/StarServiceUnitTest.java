@@ -6,6 +6,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import com.kemzeb.starviewer.exception.StarNotFoundException;
+import com.kemzeb.starviewer.star.dto.StarAssembler;
+import com.kemzeb.starviewer.star.dto.StarDto;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

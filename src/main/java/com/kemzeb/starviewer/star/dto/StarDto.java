@@ -1,4 +1,4 @@
-package com.kemzeb.starviewer.star;
+package com.kemzeb.starviewer.star.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

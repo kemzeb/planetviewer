@@ -77,4 +77,28 @@ public class StarRestControllerTest {
         // ... and we have resources.
         .andExpect(jsonPath("$._embedded.stars").exists());
   }
+
+  @Test
+  public void givenNegativePageNumber_whenListingStars_thenExpect302() throws Exception {
+    // Given
+    String pageNumber = "-1";
+
+    // When
+    // Then
+    mockMvc.perform(get("/stars?page=" + pageNumber)).andExpect(status().isFound());
+  }
+
+  @Test
+  public void givenPageNumberGreaterThanTotalPages_whenListingStars_thenExpect302()
+      throws Exception {
+    // Given
+    String pageNumber = "64";
+    Pageable pageable = PageRequest.of(2, 32);
+    Page<Star> page = new PageImpl<Star>(List.of(), pageable, 64L);
+
+    // When
+    when(starRepository.findAll(isA(Pageable.class))).thenReturn(page);
+
+    mockMvc.perform(get("/stars?page=" + pageNumber)).andExpect(status().isFound());
+  }
 }

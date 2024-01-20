@@ -10,7 +10,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(StarNotFoundException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
-  String employeeNotFoundHandler(StarNotFoundException ex) {
+  String exceptionHandler(StarNotFoundException ex) {
     return ex.getMessage();
   }
 }

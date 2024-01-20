@@ -2,6 +2,8 @@ package com.kemzeb.starviewer.star;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.kemzeb.starviewer.star.dto.StarDto;
+import com.kemzeb.starviewer.star.dto.StarMapper;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
