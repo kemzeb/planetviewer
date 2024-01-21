@@ -1,4 +1,4 @@
-package com.kemzeb.starviewer.star;
+package com.kemzeb.starviewer.star.entity;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

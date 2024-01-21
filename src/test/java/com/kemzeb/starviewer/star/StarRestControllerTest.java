@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.kemzeb.starviewer.star.entity.Star;
+import com.kemzeb.starviewer.star.entity.StarRepository;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;

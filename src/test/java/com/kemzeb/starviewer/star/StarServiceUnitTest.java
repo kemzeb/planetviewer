@@ -6,8 +6,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import com.kemzeb.starviewer.exception.StarNotFoundException;
-import com.kemzeb.starviewer.star.dto.StarAssembler;
 import com.kemzeb.starviewer.star.dto.StarDto;
+import com.kemzeb.starviewer.star.dto.StarMapper;
+import com.kemzeb.starviewer.star.entity.Star;
+import com.kemzeb.starviewer.star.entity.StarRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class StarServiceUnitTest {
 
   @InjectMocks private StarService underTest;
-  @Mock private StarAssembler starAssembler;
+  @Mock private StarMapper starMapper;
   @Mock private StarRepository starRepository;
 
   @Test
@@ -42,7 +44,7 @@ public class StarServiceUnitTest {
 
     // When
     when(starRepository.findById(name)).thenReturn(Optional.of(star));
-    when(starAssembler.toModel(any())).thenReturn(new StarDto());
+    when(starMapper.toStarDto(any())).thenReturn(new StarDto());
 
     StarDto dto = underTest.findStar(name);
 

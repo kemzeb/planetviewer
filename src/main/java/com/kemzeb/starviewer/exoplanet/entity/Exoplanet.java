@@ -1,6 +1,6 @@
 package com.kemzeb.starviewer.exoplanet.entity;
 
-import com.kemzeb.starviewer.star.Star;
+import com.kemzeb.starviewer.star.entity.Star;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

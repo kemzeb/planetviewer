@@ -2,8 +2,8 @@ package com.kemzeb.starviewer.exoplanet.dto;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
+import com.kemzeb.starviewer.exoplanet.controller.ExoplanetRestController;
 import com.kemzeb.starviewer.exoplanet.entity.Exoplanet;
-import com.kemzeb.starviewer.star.StarRestController;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import org.mapstruct.AfterMapping;
@@ -17,9 +17,9 @@ import org.springframework.hateoas.Link;
 public interface ExoplanetMapper {
 
   @AfterMapping
-  default void addLinkRelation(@MappingTarget ExoplanetDto exoplanetDto) {
+  default void addSelfLinkRelation(@MappingTarget ExoplanetDto exoplanetDto) {
     String encodedName = URLEncoder.encode(exoplanetDto.getName(), Charset.defaultCharset());
-    Link selfLink = linkTo(StarRestController.class).slash(encodedName).withSelfRel();
+    Link selfLink = linkTo(ExoplanetRestController.class).slash(encodedName).withSelfRel();
 
     exoplanetDto.add(selfLink);
   }

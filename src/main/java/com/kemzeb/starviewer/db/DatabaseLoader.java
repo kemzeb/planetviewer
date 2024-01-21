@@ -2,8 +2,8 @@ package com.kemzeb.starviewer.db;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kemzeb.starviewer.star.Star;
-import com.kemzeb.starviewer.star.StarRepository;
+import com.kemzeb.starviewer.star.entity.Star;
+import com.kemzeb.starviewer.star.entity.StarRepository;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;

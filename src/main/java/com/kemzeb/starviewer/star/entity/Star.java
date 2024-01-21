@@ -1,4 +1,4 @@
-package com.kemzeb.starviewer.star;
+package com.kemzeb.starviewer.star.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

@@ -1,4 +1,4 @@
-package com.kemzeb.starviewer.star;
+package com.kemzeb.starviewer.star.controller;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -6,12 +6,11 @@ import static org.springframework.web.servlet.mvc.method.annotation.MvcUriCompon
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
 
 import com.kemzeb.starviewer.exception.PageNumberOutOfBoundsException;
+import com.kemzeb.starviewer.star.StarService;
 import com.kemzeb.starviewer.star.dto.StarDto;
 import com.kemzeb.starviewer.util.Constants;
-import jakarta.validation.ValidationException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -64,19 +63,9 @@ public class StarRestController {
   }
 
   @GetMapping(path = "/{name}", produces = "application/hal+json")
-  public StarDto findStar(@PathVariable String name) {
-    String decodedName = tryToUrlDecode(name);
-    StarDto star = starService.findStar(decodedName);
-
-    return star;
-  }
-
-  private String tryToUrlDecode(String encoded) {
-    try {
-      return URLDecoder.decode(encoded, StandardCharsets.UTF_8.toString());
-    } catch (UnsupportedEncodingException e) {
-      throw new ValidationException("Stellar name \"" + encoded + "\" could not be URL-decoded.");
-    }
+  public StarDto findStar(@PathVariable("name") String encodedName) {
+    String decodedName = URLDecoder.decode(encodedName, Charset.defaultCharset());
+    return starService.findStar(decodedName);
   }
 
   private List<Link> createPaginatedLinks(Page<StarDto> page) {
