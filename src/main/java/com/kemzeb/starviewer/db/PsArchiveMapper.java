@@ -14,7 +14,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 @Mapper(
     componentModel = ComponentModel.SPRING,
     nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-public interface SystemArchiveMapper {
+public interface PsArchiveMapper {
 
   @ToStarSystem
   StarSystem toStarSystem(PsArchive psArchive);

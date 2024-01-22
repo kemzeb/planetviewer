@@ -30,7 +30,7 @@ public class DatabaseLoader {
 
   private static final String planetarySystemArchiveFilename = "ps.json";
 
-  private final SystemArchiveMapper systemArchiveMapper;
+  private final PsArchiveMapper psArchiveMapper;
   private final ObjectMapper objectMapper;
 
   private final StarSystemRepository starSystemRepository;
@@ -49,8 +49,6 @@ public class DatabaseLoader {
       return;
     }
 
-    // TODO: Fetch from the archive URL.
-
     ResourceLoader resourceLoader = new DefaultResourceLoader();
     Resource resource = resourceLoader.getResource("classpath:" + planetarySystemArchiveFilename);
     String content = tryToStringifyResource(resource);
@@ -64,16 +62,16 @@ public class DatabaseLoader {
         Optional<Star> maybeStar = starRepository.findById(archive.hostname);
 
         if (maybeStar.isEmpty()) {
-          StarSystem starSystem = systemArchiveMapper.toStarSystem(archive);
+          StarSystem starSystem = psArchiveMapper.toStarSystem(archive);
           starSystem = starSystemRepository.save(starSystem);
 
-          Star star = systemArchiveMapper.toStar(archive);
+          Star star = psArchiveMapper.toStar(archive);
           star.setStarSystem(starSystem);
 
           maybeStar = Optional.of(starRepository.save(star));
         }
 
-        Exoplanet exoplanet = systemArchiveMapper.toExoplanet(archive);
+        Exoplanet exoplanet = psArchiveMapper.toExoplanet(archive);
         exoplanet.setStellarHost(maybeStar.get());
         exoplanetRepository.save(exoplanet);
         continue;
@@ -83,26 +81,26 @@ public class DatabaseLoader {
       Star star = exoplanet.getStellarHost();
 
       if (archive.defaultFlag) {
-        systemArchiveMapper.updateStar(archive, star);
+        psArchiveMapper.updateStar(archive, star);
         star = starRepository.save(star);
 
         StarSystem starSystem = star.getStarSystem();
-        systemArchiveMapper.updateStarSystem(archive, starSystem);
+        psArchiveMapper.updateStarSystem(archive, starSystem);
         starSystemRepository.save(starSystem);
 
-        systemArchiveMapper.updateExoplanet(archive, exoplanet);
+        psArchiveMapper.updateExoplanet(archive, exoplanet);
         exoplanetRepository.save(exoplanet);
         continue;
       }
 
-      systemArchiveMapper.updateNullFieldsInStar(archive, star);
+      psArchiveMapper.updateNullFieldsInStar(archive, star);
       star = starRepository.save(star);
 
       StarSystem starSystem = star.getStarSystem();
-      systemArchiveMapper.updateNullFieldsInStarSystem(archive, starSystem);
+      psArchiveMapper.updateNullFieldsInStarSystem(archive, starSystem);
       starSystemRepository.save(starSystem);
 
-      systemArchiveMapper.updateNullFieldsInExoplanet(archive, exoplanet);
+      psArchiveMapper.updateNullFieldsInExoplanet(archive, exoplanet);
       exoplanetRepository.save(exoplanet);
     }
   }
