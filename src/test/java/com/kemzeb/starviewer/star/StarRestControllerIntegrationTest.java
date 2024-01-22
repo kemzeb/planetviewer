@@ -25,7 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class StarRestControllerTest {
+public class StarRestControllerIntegrationTest {
 
   @Autowired private MockMvc mockMvc;
   @MockBean private StarRepository starRepository;
