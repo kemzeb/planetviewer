@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-  @ExceptionHandler(StarNotFoundException.class)
+  @ExceptionHandler({StarNotFoundException.class, ExoplanetNotFoundException.class})
   @ResponseStatus(HttpStatus.NOT_FOUND)
-  String exceptionHandler(StarNotFoundException ex) {
+  String handleNotFoundException(Exception ex) {
     return ex.getMessage();
   }
 
   @ExceptionHandler(PageNumberOutOfBoundsException.class)
-  ResponseEntity<Void> exceptionHandler(PageNumberOutOfBoundsException ex) {
+  ResponseEntity<Void> handlePageNotFoundException(PageNumberOutOfBoundsException ex) {
     HttpHeaders headers = new HttpHeaders();
     headers.setLocation(URI.create(ex.getRedirectUrl()));
     return new ResponseEntity<>(headers, HttpStatus.FOUND);
