@@ -15,12 +15,8 @@ public class ExoplanetDto extends RepresentationModel<ExoplanetDto> {
   private String discoveryMethod;
   private String discoveryYear;
   private String discoveryFacility;
-  private String orbitalPeriodDays;
-  private String earthRadius;
-  private String earthMass;
-  private String equilibriumTemperatureKelvin;
-  private Double sysDistanceParsecs;
-  private Integer sysNumStars;
-  private Integer sysNumPlanets;
-  private Integer sysNumMoons;
+  private Double orbitalPeriodDays;
+  private Double earthRadius;
+  private Double earthMass;
+  private Double equilibriumTemperatureKelvin;
 }

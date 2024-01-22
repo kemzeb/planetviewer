@@ -24,8 +24,8 @@ public class Exoplanet {
   @Id private String name;
 
   @ManyToOne
-  @JoinColumn(name = "host_name")
-  private Star hostName;
+  @JoinColumn(name = "stellar_host", nullable = false)
+  private Star stellarHost;
 
   @Column(nullable = false)
   private String discoveryMethod;
@@ -36,20 +36,8 @@ public class Exoplanet {
   @Column(nullable = false)
   private String discoveryFacility;
 
-  private String orbitalPeriodDays;
-  private String earthRadius;
-  private String earthMass;
-  private String equilibriumTemperatureKelvin;
-
-  @Column(nullable = false)
-  private Double sysDistanceParsecs;
-
-  @Column(nullable = false)
-  private Integer sysNumStars;
-
-  @Column(nullable = false)
-  private Integer sysNumPlanets;
-
-  @Column(nullable = false)
-  private Integer sysNumMoons;
+  private Double orbitalPeriodDays;
+  private Double earthRadius;
+  private Double earthMass;
+  private Double equilibriumTemperatureKelvin;
 }

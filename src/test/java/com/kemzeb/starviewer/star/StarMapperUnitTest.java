@@ -15,7 +15,6 @@ public class StarMapperUnitTest {
     // Given
     Star star = new Star();
     star.setName("test");
-    star.setDistanceParsecs(10.12);
     star.setSpectralType("G3V");
 
     // When
@@ -24,7 +23,6 @@ public class StarMapperUnitTest {
 
     // Then
     assertEquals(star.getName(), dto.getName());
-    assertEquals(star.getDistanceParsecs(), dto.getDistanceParsecs());
     assertEquals(star.getSpectralType(), dto.getSpectralType());
   }
 }

@@ -24,6 +24,6 @@ public interface ExoplanetMapper {
     exoplanetDto.add(selfLink);
   }
 
-  @Mapping(source = "name", target = "hostName")
+  @Mapping(source = "stellarHost.name", target = "hostName")
   ExoplanetDto toExoplanetDto(Exoplanet exoplanet);
 }
