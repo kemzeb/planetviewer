@@ -14,6 +14,7 @@ import com.kemzeb.starviewer.util.Constants;
 import com.kemzeb.starviewer.util.PagedModelAssembler;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -70,13 +71,13 @@ public class StarRestController {
     return pagedModelAssembler.toModel(page, selfLink);
   }
 
-  @GetMapping(path = "/{name}", produces = "application/hal+json")
+  @GetMapping("/{name}")
   public StarDto findStar(@PathVariable("name") String encodedName) {
     String decodedName = URLDecoder.decode(encodedName, Charset.defaultCharset());
     return starService.findStar(decodedName);
   }
 
-  @GetMapping(path = "/{name}/planets")
+  @GetMapping("/{name}/planets")
   public CollectionModel<ExoplanetDto> findExoplanetsThatOrbitStar(
       @PathVariable("name") String encodedName) {
 
@@ -84,7 +85,9 @@ public class StarRestController {
     Link selfLink =
         linkTo(methodOn(getClass()).findExoplanetsThatOrbitStar(encodedName))
             .withRel(IanaLinkRelations.SELF);
+    Link starLink = linkTo(methodOn(getClass()).findStar(encodedName)).withRel("star");
 
-    return CollectionModel.of(exoplanetService.findExoplanetsThatOrbitStar(decodedName), selfLink);
+    return CollectionModel.of(
+        exoplanetService.findExoplanetsThatOrbitStar(decodedName), List.of(selfLink, starLink));
   }
 }

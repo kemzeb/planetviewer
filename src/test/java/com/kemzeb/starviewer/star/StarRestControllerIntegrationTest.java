@@ -127,6 +127,7 @@ public class StarRestControllerIntegrationTest {
         .andExpect(status().isOk())
         .andExpect(content().contentType("application/hal+json"))
         .andExpect(jsonPath("$._embedded.exoplanets").exists())
-        .andExpect(jsonPath("$._links.self.href").exists());
+        .andExpect(jsonPath("$._links.self.href").exists())
+        .andExpect(jsonPath("$._links.star.href").exists());
   }
 }
