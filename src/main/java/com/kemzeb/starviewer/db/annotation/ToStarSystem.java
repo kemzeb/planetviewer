@@ -9,5 +9,7 @@ import org.mapstruct.Mapping;
 @Mapping(source = "sySnum", target = "numStars")
 @Mapping(source = "syMnum", target = "numMoons")
 @Mapping(source = "syPnum", target = "numPlanets")
+@Mapping(source = "glat", target = "galacticLatitudeDegrees")
+@Mapping(source = "glon", target = "galacticLongitudeDegrees")
 @Mapping(target = "id", ignore = true)
 public @interface ToStarSystem {}

@@ -8,14 +8,22 @@ import lombok.Data;
 
 @Entity
 @Data
-public class StarSystem {
+public class PlanetarySystem {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-  private Double distanceParsecs;
   private Integer numStars;
   private Integer numPlanets;
   private Integer numMoons;
+
+  /** Distance to the system in units of parsecs. */
+  private Double distanceParsecs;
+
+  /** Galactic latitude of the system in units of decimal degrees. */
+  private Double galacticLatitudeDegrees;
+
+  /** Galactic longitude of the system in units of decimal degrees. */
+  private Double galacticLongitudeDegrees;
 }

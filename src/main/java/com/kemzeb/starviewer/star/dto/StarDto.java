@@ -15,4 +15,9 @@ public class StarDto extends RepresentationModel<StarDto> {
 
   @NotBlank private String name;
   private String spectralType;
+
+  private Double effectiveTemperatureKelvin;
+  private Double solarRadius;
+  private Double solarMass;
+  private Double ageGyr;
 }

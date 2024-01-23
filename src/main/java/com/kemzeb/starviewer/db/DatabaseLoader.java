@@ -6,8 +6,8 @@ import com.kemzeb.starviewer.exoplanet.entity.Exoplanet;
 import com.kemzeb.starviewer.exoplanet.entity.ExoplanetRepository;
 import com.kemzeb.starviewer.star.entity.Star;
 import com.kemzeb.starviewer.star.entity.StarRepository;
-import com.kemzeb.starviewer.system.entity.StarSystem;
-import com.kemzeb.starviewer.system.entity.StarSystemRepository;
+import com.kemzeb.starviewer.system.entity.PlanetarySystem;
+import com.kemzeb.starviewer.system.entity.PlanetarySystemRepository;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -33,7 +33,7 @@ public class DatabaseLoader {
   private final PsArchiveMapper psArchiveMapper;
   private final ObjectMapper objectMapper;
 
-  private final StarSystemRepository starSystemRepository;
+  private final PlanetarySystemRepository planetarySystemRepository;
   private final ExoplanetRepository exoplanetRepository;
   private final StarRepository starRepository;
 
@@ -62,8 +62,8 @@ public class DatabaseLoader {
         Optional<Star> maybeStar = starRepository.findById(archive.hostname);
 
         if (maybeStar.isEmpty()) {
-          StarSystem starSystem = psArchiveMapper.toStarSystem(archive);
-          starSystem = starSystemRepository.save(starSystem);
+          PlanetarySystem starSystem = psArchiveMapper.toStarSystem(archive);
+          starSystem = planetarySystemRepository.save(starSystem);
 
           Star star = psArchiveMapper.toStar(archive);
           star.setStarSystem(starSystem);
@@ -84,9 +84,9 @@ public class DatabaseLoader {
         psArchiveMapper.updateStar(archive, star);
         star = starRepository.save(star);
 
-        StarSystem starSystem = star.getStarSystem();
+        PlanetarySystem starSystem = star.getStarSystem();
         psArchiveMapper.updateStarSystem(archive, starSystem);
-        starSystemRepository.save(starSystem);
+        planetarySystemRepository.save(starSystem);
 
         psArchiveMapper.updateExoplanet(archive, exoplanet);
         exoplanetRepository.save(exoplanet);
@@ -96,9 +96,9 @@ public class DatabaseLoader {
       psArchiveMapper.updateNullFieldsInStar(archive, star);
       star = starRepository.save(star);
 
-      StarSystem starSystem = star.getStarSystem();
+      PlanetarySystem starSystem = star.getStarSystem();
       psArchiveMapper.updateNullFieldsInStarSystem(archive, starSystem);
-      starSystemRepository.save(starSystem);
+      planetarySystemRepository.save(starSystem);
 
       psArchiveMapper.updateNullFieldsInExoplanet(archive, exoplanet);
       exoplanetRepository.save(exoplanet);
