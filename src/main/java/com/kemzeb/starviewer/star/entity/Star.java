@@ -15,8 +15,8 @@ public class Star {
   @Id private String name;
 
   @ManyToOne
-  @JoinColumn(name = "star_system", nullable = false)
-  private PlanetarySystem starSystem;
+  @JoinColumn(name = "planetary_system", nullable = false)
+  private PlanetarySystem planetarySystem;
 
   /** The stellar classification. */
   private String spectralType;

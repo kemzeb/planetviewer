@@ -12,4 +12,4 @@ import org.mapstruct.Mapping;
 @Mapping(source = "glat", target = "galacticLatitudeDegrees")
 @Mapping(source = "glon", target = "galacticLongitudeDegrees")
 @Mapping(target = "id", ignore = true)
-public @interface ToStarSystem {}
+public @interface ToPlanetarySystem {}

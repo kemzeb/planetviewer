@@ -5,6 +5,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.kemzeb.starviewer.star.controller.StarRestController;
 import com.kemzeb.starviewer.star.entity.Star;
+import com.kemzeb.starviewer.system.dto.PlanetarySystemMapper;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import org.mapstruct.AfterMapping;
@@ -12,7 +13,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants.ComponentModel;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = ComponentModel.SPRING)
+@Mapper(componentModel = ComponentModel.SPRING, uses = PlanetarySystemMapper.class)
 public interface StarMapper {
 
   @AfterMapping

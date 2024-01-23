@@ -11,5 +11,5 @@ import org.mapstruct.Mapping;
 @Mapping(source = "stRad", target = "solarRadius")
 @Mapping(source = "stMass", target = "solarMass")
 @Mapping(source = "stAge", target = "ageGyr")
-@Mapping(target = "starSystem", ignore = true)
+@Mapping(target = "planetarySystem", ignore = true)
 public @interface ToStar {}

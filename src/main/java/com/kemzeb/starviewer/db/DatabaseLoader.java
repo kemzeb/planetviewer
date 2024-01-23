@@ -62,11 +62,11 @@ public class DatabaseLoader {
         Optional<Star> maybeStar = starRepository.findById(archive.hostname);
 
         if (maybeStar.isEmpty()) {
-          PlanetarySystem starSystem = psArchiveMapper.toStarSystem(archive);
-          starSystem = planetarySystemRepository.save(starSystem);
+          PlanetarySystem planetarySystem = psArchiveMapper.toPlanetarySystem(archive);
+          planetarySystem = planetarySystemRepository.save(planetarySystem);
 
           Star star = psArchiveMapper.toStar(archive);
-          star.setStarSystem(starSystem);
+          star.setPlanetarySystem(planetarySystem);
 
           maybeStar = Optional.of(starRepository.save(star));
         }
@@ -84,9 +84,9 @@ public class DatabaseLoader {
         psArchiveMapper.updateStar(archive, star);
         star = starRepository.save(star);
 
-        PlanetarySystem starSystem = star.getStarSystem();
-        psArchiveMapper.updateStarSystem(archive, starSystem);
-        planetarySystemRepository.save(starSystem);
+        PlanetarySystem planetarySystem = star.getPlanetarySystem();
+        psArchiveMapper.updatePlanetarySystem(archive, planetarySystem);
+        planetarySystemRepository.save(planetarySystem);
 
         psArchiveMapper.updateExoplanet(archive, exoplanet);
         exoplanetRepository.save(exoplanet);
@@ -96,9 +96,9 @@ public class DatabaseLoader {
       psArchiveMapper.updateNullFieldsInStar(archive, star);
       star = starRepository.save(star);
 
-      PlanetarySystem starSystem = star.getStarSystem();
-      psArchiveMapper.updateNullFieldsInStarSystem(archive, starSystem);
-      planetarySystemRepository.save(starSystem);
+      PlanetarySystem planetarySystem = star.getPlanetarySystem();
+      psArchiveMapper.updateNullFieldsInPlanetarySystem(archive, planetarySystem);
+      planetarySystemRepository.save(planetarySystem);
 
       psArchiveMapper.updateNullFieldsInExoplanet(archive, exoplanet);
       exoplanetRepository.save(exoplanet);

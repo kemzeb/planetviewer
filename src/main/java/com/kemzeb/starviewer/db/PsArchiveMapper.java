@@ -1,8 +1,8 @@
 package com.kemzeb.starviewer.db;
 
 import com.kemzeb.starviewer.db.annotation.ToExoplanet;
+import com.kemzeb.starviewer.db.annotation.ToPlanetarySystem;
 import com.kemzeb.starviewer.db.annotation.ToStar;
-import com.kemzeb.starviewer.db.annotation.ToStarSystem;
 import com.kemzeb.starviewer.exoplanet.entity.Exoplanet;
 import com.kemzeb.starviewer.star.entity.Star;
 import com.kemzeb.starviewer.system.entity.PlanetarySystem;
@@ -16,8 +16,8 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
     nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface PsArchiveMapper {
 
-  @ToStarSystem
-  PlanetarySystem toStarSystem(PsArchive psArchive);
+  @ToPlanetarySystem
+  PlanetarySystem toPlanetarySystem(PsArchive psArchive);
 
   @ToStar
   Star toStar(PsArchive psArchive);
@@ -25,8 +25,8 @@ public interface PsArchiveMapper {
   @ToExoplanet
   Exoplanet toExoplanet(PsArchive psArchive);
 
-  @ToStarSystem
-  void updateStarSystem(PsArchive psArchive, @MappingTarget PlanetarySystem starSystem);
+  @ToPlanetarySystem
+  void updatePlanetarySystem(PsArchive psArchive, @MappingTarget PlanetarySystem planetarySystem);
 
   @ToStar
   void updateStar(PsArchive psArchive, @MappingTarget Star star);
@@ -34,21 +34,22 @@ public interface PsArchiveMapper {
   @ToExoplanet
   void updateExoplanet(PsArchive psArchive, @MappingTarget Exoplanet exoplanet);
 
-  default void updateNullFieldsInStarSystem(PsArchive psArchive, PlanetarySystem starSystem) {
-    if ((psArchive.syDist != null) && (starSystem.getDistanceParsecs() == null)) {
-      starSystem.setDistanceParsecs(psArchive.syDist);
+  default void updateNullFieldsInPlanetarySystem(
+      PsArchive psArchive, PlanetarySystem planetarySystem) {
+    if ((psArchive.syDist != null) && (planetarySystem.getDistanceParsecs() == null)) {
+      planetarySystem.setDistanceParsecs(psArchive.syDist);
     }
 
-    if ((psArchive.sySnum != null) && (starSystem.getNumStars() == null)) {
-      starSystem.setNumStars(psArchive.sySnum);
+    if ((psArchive.sySnum != null) && (planetarySystem.getNumStars() == null)) {
+      planetarySystem.setNumStars(psArchive.sySnum);
     }
 
-    if ((psArchive.syPnum) != null && (starSystem.getNumPlanets() == null)) {
-      starSystem.setNumPlanets(psArchive.syPnum);
+    if ((psArchive.syPnum) != null && (planetarySystem.getNumPlanets() == null)) {
+      planetarySystem.setNumPlanets(psArchive.syPnum);
     }
 
-    if ((psArchive.syMnum != null) && (starSystem.getNumMoons() == null)) {
-      starSystem.setNumMoons(psArchive.syMnum);
+    if ((psArchive.syMnum != null) && (planetarySystem.getNumMoons() == null)) {
+      planetarySystem.setNumMoons(psArchive.syMnum);
     }
   }
 
