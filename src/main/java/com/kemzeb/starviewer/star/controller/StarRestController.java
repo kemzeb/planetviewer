@@ -6,6 +6,8 @@ import static org.springframework.web.servlet.mvc.method.annotation.MvcUriCompon
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
 
 import com.kemzeb.starviewer.exception.PageNumberOutOfBoundsException;
+import com.kemzeb.starviewer.exoplanet.dto.ExoplanetDto;
+import com.kemzeb.starviewer.exoplanet.service.ExoplanetService;
 import com.kemzeb.starviewer.star.dto.StarDto;
 import com.kemzeb.starviewer.star.service.StarService;
 import com.kemzeb.starviewer.util.Constants;
@@ -16,6 +18,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
@@ -31,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class StarRestController {
 
   private final StarService starService;
+  private final ExoplanetService exoplanetService;
   private final PagedModelAssembler<StarDto> pagedModelAssembler;
 
   @GetMapping(produces = "application/hal+json")
@@ -70,5 +74,17 @@ public class StarRestController {
   public StarDto findStar(@PathVariable("name") String encodedName) {
     String decodedName = URLDecoder.decode(encodedName, Charset.defaultCharset());
     return starService.findStar(decodedName);
+  }
+
+  @GetMapping(path = "/{name}/planets")
+  public CollectionModel<ExoplanetDto> findExoplanetsThatOrbitStar(
+      @PathVariable("name") String encodedName) {
+
+    String decodedName = URLDecoder.decode(encodedName, Charset.defaultCharset());
+    Link selfLink =
+        linkTo(methodOn(getClass()).findExoplanetsThatOrbitStar(encodedName))
+            .withRel(IanaLinkRelations.SELF);
+
+    return CollectionModel.of(exoplanetService.findExoplanetsThatOrbitStar(decodedName), selfLink);
   }
 }

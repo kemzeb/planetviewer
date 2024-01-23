@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.kemzeb.starviewer.exoplanet.dto.ExoplanetDto;
+import com.kemzeb.starviewer.exoplanet.service.ExoplanetService;
 import com.kemzeb.starviewer.star.entity.Star;
 import com.kemzeb.starviewer.star.entity.StarRepository;
 import java.util.List;
@@ -29,6 +31,7 @@ public class StarRestControllerIntegrationTest {
 
   @Autowired private MockMvc mockMvc;
   @MockBean private StarRepository starRepository;
+  @MockBean private ExoplanetService exoplanetService;
 
   @Test
   public void givenExistingStar_whenFindingStar_thenExpect200() throws Exception {
@@ -102,5 +105,28 @@ public class StarRestControllerIntegrationTest {
     when(starRepository.findAll(isA(Pageable.class))).thenReturn(page);
 
     mockMvc.perform(get("/stars?page=" + pageNumber)).andExpect(status().isFound());
+  }
+
+  @Test
+  public void givenExoplanetsThatOrbitStar_whenListingExoplanetsThatOrbitStar_thenExpect200()
+      throws Exception {
+    // Given
+    ExoplanetDto a = new ExoplanetDto();
+    a.setName("Aridia");
+
+    List<ExoplanetDto> exoplanets = List.of(a);
+
+    String starName = "Test";
+
+    // When
+    when(exoplanetService.findExoplanetsThatOrbitStar(eq(starName))).thenReturn(exoplanets);
+
+    // Then
+    mockMvc
+        .perform(get("/stars/{name}/planets", starName))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType("application/hal+json"))
+        .andExpect(jsonPath("$._embedded.exoplanets").exists())
+        .andExpect(jsonPath("$._links.self.href").exists());
   }
 }
