@@ -1,4 +1,4 @@
-package com.kemzeb.starviewer.star;
+package com.kemzeb.starviewer.star.service;
 
 import com.kemzeb.starviewer.exception.StarNotFoundException;
 import com.kemzeb.starviewer.star.dto.StarDto;

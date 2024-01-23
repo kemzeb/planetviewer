@@ -6,8 +6,8 @@ import static org.springframework.web.servlet.mvc.method.annotation.MvcUriCompon
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
 
 import com.kemzeb.starviewer.exception.PageNumberOutOfBoundsException;
-import com.kemzeb.starviewer.star.StarService;
 import com.kemzeb.starviewer.star.dto.StarDto;
+import com.kemzeb.starviewer.star.service.StarService;
 import com.kemzeb.starviewer.util.Constants;
 import com.kemzeb.starviewer.util.PagedModelAssembler;
 import java.net.URLDecoder;

@@ -10,6 +10,7 @@ import com.kemzeb.starviewer.star.dto.StarDto;
 import com.kemzeb.starviewer.star.dto.StarMapper;
 import com.kemzeb.starviewer.star.entity.Star;
 import com.kemzeb.starviewer.star.entity.StarRepository;
+import com.kemzeb.starviewer.star.service.StarService;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
