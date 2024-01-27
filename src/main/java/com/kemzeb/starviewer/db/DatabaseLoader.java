@@ -2,12 +2,12 @@ package com.kemzeb.starviewer.db;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kemzeb.starviewer.exoplanet.entity.Exoplanet;
-import com.kemzeb.starviewer.exoplanet.entity.ExoplanetRepository;
-import com.kemzeb.starviewer.star.entity.Star;
-import com.kemzeb.starviewer.star.entity.StarRepository;
-import com.kemzeb.starviewer.system.entity.PlanetarySystem;
-import com.kemzeb.starviewer.system.entity.PlanetarySystemRepository;
+import com.kemzeb.starviewer.entity.Exoplanet;
+import com.kemzeb.starviewer.entity.PlanetarySystem;
+import com.kemzeb.starviewer.entity.Star;
+import com.kemzeb.starviewer.repository.ExoplanetRepository;
+import com.kemzeb.starviewer.repository.PlanetarySystemRepository;
+import com.kemzeb.starviewer.repository.StarRepository;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.nio.charset.Charset;
