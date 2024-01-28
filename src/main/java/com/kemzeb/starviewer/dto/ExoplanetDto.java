@@ -15,7 +15,7 @@ public class ExoplanetDto extends RepresentationModel<ExoplanetDto> {
   private String name;
   private String hostName;
   private String discoveryMethod;
-  private String discoveryYear;
+  private Integer discoveryYear;
   private String discoveryFacility;
   private Double orbitalPeriodDays;
   private Double earthRadius;

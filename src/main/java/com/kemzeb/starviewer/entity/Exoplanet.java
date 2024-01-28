@@ -30,7 +30,7 @@ public class Exoplanet {
   private String discoveryMethod;
 
   @Column(nullable = false)
-  private String discoveryYear;
+  private Integer discoveryYear;
 
   @Column(nullable = false)
   private String discoveryFacility;
