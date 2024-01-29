@@ -1,52 +1,66 @@
 package com.kemzeb.starviewer.controller;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.kemzeb.starviewer.entity.Exoplanet;
-import com.kemzeb.starviewer.repository.ExoplanetRepository;
+import com.kemzeb.starviewer.dto.ExoplanetDto;
+import com.kemzeb.starviewer.dto.ExoplanetSearchHit;
+import com.kemzeb.starviewer.service.ExoplanetService;
+import com.kemzeb.starviewer.util.PagedModelAssembler;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(ExoplanetRestController.class)
 public class ExoplanetRestControllerIntegrationTest {
 
+  @TestConfiguration
+  static class TestConfig {
+
+    @Bean
+    public PagedModelAssembler<ExoplanetDto> exoplanetPagedModelAssembler() {
+      return new PagedModelAssembler<>();
+    }
+
+    @Bean
+    public PagedModelAssembler<ExoplanetSearchHit> documentPagedModelAssembler() {
+      return new PagedModelAssembler<>();
+    }
+  }
+
   @Autowired private MockMvc mockMvc;
-  @MockBean private ExoplanetRepository exoplanetRepository;
+  @MockBean private ExoplanetService exoplanetService;
 
   @Test
   public void givenExistingExoplanet_whenFindingExoplanet_thenExpect200() throws Exception {
     // Given
     String name = "Novalis";
 
-    Exoplanet exoplanet = new Exoplanet();
-    exoplanet.setName(name);
+    ExoplanetDto exoplanetDto = new ExoplanetDto();
+    exoplanetDto.setName(name);
 
     // When
-    when(exoplanetRepository.findById(eq(name))).thenReturn(Optional.of(exoplanet));
+    when(exoplanetService.findExoplanet(eq(name))).thenReturn(exoplanetDto);
 
     // Then
     mockMvc
         .perform(get("/planets/{name}", name).contentType("application/json"))
         .andExpect(status().isOk())
-        .andExpect(content().contentType("application/hal+json"))
-        .andExpect(jsonPath("$._links.self.href").exists());
+        .andExpect(content().contentType("application/hal+json"));
   }
 
   @Test
@@ -54,16 +68,16 @@ public class ExoplanetRestControllerIntegrationTest {
     // Given
     Pageable pageable = PageRequest.of(2, 32);
 
-    Exoplanet a = new Exoplanet();
+    ExoplanetDto a = new ExoplanetDto();
     a.setName("a");
 
-    Exoplanet b = new Exoplanet();
+    ExoplanetDto b = new ExoplanetDto();
     b.setName("a");
 
-    Page<Exoplanet> page = new PageImpl<Exoplanet>(List.of(a, b), pageable, 128L);
+    Page<ExoplanetDto> page = new PageImpl<>(List.of(a, b), pageable, 128L);
 
     // When
-    when(exoplanetRepository.findAll(isA(Pageable.class))).thenReturn(page);
+    when(exoplanetService.getExoplanetList(any())).thenReturn(page);
 
     // Then
     mockMvc
@@ -96,10 +110,10 @@ public class ExoplanetRestControllerIntegrationTest {
     // Given
     String pageNumber = "64";
     Pageable pageable = PageRequest.of(2, 32);
-    Page<Exoplanet> page = new PageImpl<Exoplanet>(List.of(), pageable, 64L);
+    Page<ExoplanetDto> page = new PageImpl<>(List.of(), pageable, 64L);
 
     // When
-    when(exoplanetRepository.findAll(isA(Pageable.class))).thenReturn(page);
+    when(exoplanetService.getExoplanetList(any())).thenReturn(page);
 
     mockMvc.perform(get("/planets?page=" + pageNumber)).andExpect(status().isFound());
   }

@@ -4,6 +4,26 @@
             "name": "starviewer.should-cli-runner-run",
             "type": "java.lang.Boolean",
             "description": "Boolean that determines if commnand line runners should run (used for tests)."
+        },
+        {
+            "name": "starviewer.elasticsearch.host",
+            "type": "java.lang.String",
+            "description": "Host name of the ElasticSearch infrastructure."
+        },
+        {
+            "name": "starviewer.elasticsearch.port",
+            "type": "java.lang.String",
+            "description": "Port number of the ElasticSearch infrastructure."
+        },
+        {
+            "name": "starviewer.elasticsearch.username",
+            "type": "java.lang.String",
+            "description": "Username to ElasticSearch infrastructure."
+        },
+        {
+            "name": "starviewer.elasticsearch.password",
+            "type": "java.lang.String",
+            "description": "Password to ElasticSearch infrastructure."
         }
     ]
 }

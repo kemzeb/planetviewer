@@ -6,6 +6,7 @@ import static org.springframework.web.servlet.mvc.method.annotation.MvcUriCompon
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
 
 import com.kemzeb.starviewer.dto.ExoplanetDto;
+import com.kemzeb.starviewer.dto.ExoplanetSearchHit;
 import com.kemzeb.starviewer.exception.PageNumberOutOfBoundsException;
 import com.kemzeb.starviewer.service.ExoplanetService;
 import com.kemzeb.starviewer.util.Constants;
@@ -31,7 +32,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class ExoplanetRestController {
 
   private final ExoplanetService exoplanetService;
-  private final PagedModelAssembler<ExoplanetDto> pagedModelAssembler;
+  private final PagedModelAssembler<ExoplanetDto> enityPagedModelAssembler;
+  private final PagedModelAssembler<ExoplanetSearchHit> searchHitPagedModelAssembler;
 
   @GetMapping(produces = "application/hal+json")
   public PagedModel<ExoplanetDto> listExoplanets(
@@ -64,12 +66,47 @@ public class ExoplanetRestController {
         linkTo(methodOn(getClass()).listExoplanets(Optional.empty()))
             .withRel(IanaLinkRelations.SELF);
 
-    return pagedModelAssembler.toModel(page, selfLink);
+    return enityPagedModelAssembler.toModel(page, selfLink);
   }
 
   @GetMapping(path = "/{name}", produces = "application/hal+json")
   public ExoplanetDto findExoplanet(@PathVariable("name") String encodedName) {
     String decodedName = URLDecoder.decode(encodedName, Charset.defaultCharset());
     return exoplanetService.findExoplanet(decodedName);
+  }
+
+  // TODO: Support "q" query parameter parsing.
+
+  @GetMapping("/search")
+  public PagedModel<ExoplanetSearchHit> search(
+      @RequestParam(name = "q", required = true) String query,
+      @RequestParam("page") Optional<Integer> maybePageNumber) {
+
+    int pageNumber = maybePageNumber.orElse(0);
+
+    if (pageNumber < 0) {
+      Integer firstPageNumber = 0;
+      String newUrl =
+          fromMethodCall(on(getClass()).search(query, Optional.of(firstPageNumber)))
+              .buildAndExpand()
+              .toUriString();
+      throw new PageNumberOutOfBoundsException(newUrl);
+    }
+
+    Page<ExoplanetSearchHit> page =
+        exoplanetService.searchWith(PageRequest.of(pageNumber, Constants.DEFAULT_PAGE_SIZE), query);
+
+    if (page.getNumber() >= page.getTotalPages()) {
+      Integer lastPageNumber = page.getTotalPages() - 1;
+      String newUrl =
+          fromMethodCall(on(getClass()).search(query, Optional.of(lastPageNumber)))
+              .buildAndExpand()
+              .toUriString();
+      throw new PageNumberOutOfBoundsException(newUrl);
+    }
+
+    Link selfLink = linkTo(methodOn(getClass()).search(query, Optional.empty())).withSelfRel();
+
+    return searchHitPagedModelAssembler.toModel(page, selfLink);
   }
 }

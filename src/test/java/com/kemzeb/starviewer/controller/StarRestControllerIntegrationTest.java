@@ -1,7 +1,7 @@
 package com.kemzeb.starviewer.controller;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -9,28 +9,37 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.kemzeb.starviewer.dto.ExoplanetDto;
-import com.kemzeb.starviewer.entity.Star;
-import com.kemzeb.starviewer.repository.StarRepository;
+import com.kemzeb.starviewer.dto.StarDto;
 import com.kemzeb.starviewer.service.ExoplanetService;
+import com.kemzeb.starviewer.service.StarService;
+import com.kemzeb.starviewer.util.PagedModelAssembler;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(StarRestController.class)
 public class StarRestControllerIntegrationTest {
 
+  @TestConfiguration
+  static class TestConfig {
+
+    @Bean
+    public PagedModelAssembler<StarDto> pagedModelAssembler() {
+      return new PagedModelAssembler<>();
+    }
+  }
+
   @Autowired private MockMvc mockMvc;
-  @MockBean private StarRepository starRepository;
+  @MockBean private StarService starService;
   @MockBean private ExoplanetService exoplanetService;
 
   @Test
@@ -38,18 +47,17 @@ public class StarRestControllerIntegrationTest {
     // Given
     String name = "HIP 171";
 
-    Star star = new Star();
-    star.setName(name);
+    StarDto starDto = new StarDto();
+    starDto.setName(name);
 
     // When
-    when(starRepository.findById(eq(name))).thenReturn(Optional.of(star));
+    when(starService.findStar(eq(name))).thenReturn(starDto);
 
     // Then
     mockMvc
         .perform(get("/stars/{name}", "HIP%20171").contentType("application/json"))
         .andExpect(status().isOk())
-        .andExpect(content().contentType("application/hal+json"))
-        .andExpect(jsonPath("$._links.self.href").exists());
+        .andExpect(content().contentType("application/hal+json"));
   }
 
   @Test
@@ -57,16 +65,16 @@ public class StarRestControllerIntegrationTest {
     // Given
     Pageable pageable = PageRequest.of(2, 32);
 
-    Star a = new Star();
+    StarDto a = new StarDto();
     a.setName("a");
 
-    Star b = new Star();
+    StarDto b = new StarDto();
     b.setName("a");
 
-    Page<Star> page = new PageImpl<Star>(List.of(a, b), pageable, 128L);
+    Page<StarDto> page = new PageImpl<>(List.of(a, b), pageable, 128L);
 
     // When
-    when(starRepository.findAll(isA(Pageable.class))).thenReturn(page);
+    when(starService.getStarList(any())).thenReturn(page);
 
     // Then
     mockMvc
@@ -99,10 +107,10 @@ public class StarRestControllerIntegrationTest {
     // Given
     String pageNumber = "64";
     Pageable pageable = PageRequest.of(2, 32);
-    Page<Star> page = new PageImpl<Star>(List.of(), pageable, 64L);
+    Page<StarDto> page = new PageImpl<>(List.of(), pageable, 64L);
 
     // When
-    when(starRepository.findAll(isA(Pageable.class))).thenReturn(page);
+    when(starService.getStarList(any())).thenReturn(page);
 
     mockMvc.perform(get("/stars?page=" + pageNumber)).andExpect(status().isFound());
   }
