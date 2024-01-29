@@ -1,0 +1,36 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/java-postgres
+{
+	"name": "tissue",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {}
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// This can be used to network with other containers or with the host.
+	"forwardPorts": [
+		8080
+	],
+	// Configure tool-specific properties.
+	"customizations": {
+		"vscode": {
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"vscjava.vscode-java-pack",
+				"shengchen.vscode-checkstyle", // Java code linting
+				"redhat.fabric8-analytics", // Java dependency analysis
+				"vmware.vscode-spring-boot" // Spring application config validation
+			],
+			"settings": {
+				"editor.formatOnSave": true,
+				"java.format.enabled": false, // Disable formatting from redhat plugin, use mvn manually instead
+				"java.checkstyle.configuration": "checkstyle.xml",
+				"[java]": {
+					"editor.insertSpaces": true,
+					"editor.tabSize": 2
+				}
+			}
+		}
+	}
+}
