@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.kemzeb</groupId>
-	<artifactId>starviewer</artifactId>
+	<artifactId>planetviewer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>starviewer</name>
+	<name>planetviewer</name>
 	<description>Fullstack app to view and interact with exoplanet/stars.</description>
 	<properties>
 		<java.version>21</java.version>

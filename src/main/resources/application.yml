@@ -12,7 +12,7 @@ spring:
 server:
   servlet:
     context-path: /api
-starviewer:
+planetviewer:
     should-cli-runner-run: true
     elasticsearch:
         host: ${ELASTIC_HOST}
