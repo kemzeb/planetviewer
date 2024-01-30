@@ -17,7 +17,6 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,9 +61,7 @@ public class ExoplanetRestController {
       throw new PageNumberOutOfBoundsException(newUrl);
     }
 
-    Link selfLink =
-        linkTo(methodOn(getClass()).listExoplanets(Optional.empty()))
-            .withRel(IanaLinkRelations.SELF);
+    Link selfLink = linkTo(methodOn(getClass()).listExoplanets(Optional.empty())).withSelfRel();
 
     return enityPagedModelAssembler.toModel(page, selfLink);
   }

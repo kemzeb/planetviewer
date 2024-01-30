@@ -83,8 +83,7 @@ public class StarRestController {
 
     String decodedName = URLDecoder.decode(encodedName, Charset.defaultCharset());
     Link selfLink =
-        linkTo(methodOn(getClass()).findExoplanetsThatOrbitStar(encodedName))
-            .withRel(IanaLinkRelations.SELF);
+        linkTo(methodOn(getClass()).findExoplanetsThatOrbitStar(encodedName)).withSelfRel();
     Link starLink = linkTo(methodOn(getClass()).findStar(encodedName)).withRel("star");
 
     return CollectionModel.of(

@@ -5,7 +5,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.kemzeb.starviewer.dto.RootDto;
 import java.util.Optional;
-import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,8 +20,7 @@ public class RootRestController {
     dto.add(
         linkTo(methodOn(ExoplanetRestController.class).listExoplanets(Optional.empty()))
             .withRel("exoplanets"));
-    dto.add(
-        linkTo(methodOn(RootRestController.class).listAllLinks()).withRel(IanaLinkRelations.SELF));
+    dto.add(linkTo(methodOn(RootRestController.class).listAllLinks()).withSelfRel());
 
     return dto;
   }
