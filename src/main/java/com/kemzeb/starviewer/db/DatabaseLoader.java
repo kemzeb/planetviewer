@@ -73,7 +73,7 @@ public class DatabaseLoader {
       Optional<Exoplanet> maybeExoplanet = exoplanetRepository.findById(archive.plName);
 
       if (maybeExoplanet.isEmpty()) {
-        Optional<Star> maybeStar = starRepository.findById(archive.hostname);
+        Optional<Star> maybeStar = starRepository.findById(archive.stellarHost);
 
         if (maybeStar.isEmpty()) {
           PlanetarySystem planetarySystem = psArchiveMapper.toPlanetarySystem(archive);

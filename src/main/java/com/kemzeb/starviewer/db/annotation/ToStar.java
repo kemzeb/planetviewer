@@ -5,7 +5,7 @@ import java.lang.annotation.RetentionPolicy;
 import org.mapstruct.Mapping;
 
 @Retention(RetentionPolicy.CLASS)
-@Mapping(source = "hostname", target = "name")
+@Mapping(source = "stellarHost", target = "name")
 @Mapping(source = "stSpectype", target = "spectralType")
 @Mapping(source = "stTeff", target = "effectiveTemperatureKelvin")
 @Mapping(source = "stRad", target = "solarRadius")

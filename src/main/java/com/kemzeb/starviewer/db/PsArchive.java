@@ -51,7 +51,7 @@ public class PsArchive {
   public String plName;
 
   @JsonProperty("hostname")
-  public String hostname;
+  public String stellarHost;
 
   @JsonProperty("sy_snum")
   public Integer sySnum;
