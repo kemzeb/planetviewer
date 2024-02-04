@@ -4,8 +4,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 import com.kemzeb.planetviewer.controller.ExoplanetRestController;
 import com.kemzeb.planetviewer.document.ExoplanetDocument;
+import com.kemzeb.planetviewer.dto.CelestialBodySearchHit;
 import com.kemzeb.planetviewer.dto.ExoplanetDto;
-import com.kemzeb.planetviewer.dto.ExoplanetSearchHit;
 import com.kemzeb.planetviewer.entity.Exoplanet;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -30,15 +30,9 @@ public abstract class ExoplanetMapper {
   public abstract ExoplanetDocument toExoplanetDocument(Exoplanet exoplanet);
 
   @Mapping(source = "score", target = "hitScore")
-  @Mapping(source = "content.discoveryMethod", target = "discoveryMethod")
-  @Mapping(source = "content.discoveryFacility", target = "discoveryFacility")
-  @Mapping(source = "content.discoveryYear", target = "discoveryYear")
   @Mapping(source = "content.name", target = "name")
-  @Mapping(source = "content.stellarHost", target = "stellarHost")
-  @Mapping(source = "content.sysNumStars", target = "sysNumStars")
-  @Mapping(source = "content.sysNumPlanets", target = "sysNumPlanets")
-  @Mapping(source = "content.sysNumMoons", target = "sysNumMoons")
-  public abstract ExoplanetSearchHit toExoplanetSearchHit(SearchHit<ExoplanetDocument> searchHit);
+  public abstract CelestialBodySearchHit toCelestialBodySearchHit(
+      SearchHit<ExoplanetDocument> searchHit);
 
   @AfterMapping
   void addSelfLinkRelation(@MappingTarget ExoplanetDto exoplanetDto) {
@@ -46,8 +40,8 @@ public abstract class ExoplanetMapper {
   }
 
   @AfterMapping
-  void addSelfLinkRelation(@MappingTarget ExoplanetSearchHit exoplanetSearchHit) {
-    exoplanetSearchHit.add(createSelfLink(exoplanetSearchHit.getName()));
+  void addSelfLinkRelation(@MappingTarget CelestialBodySearchHit stellarObjectSearchHit) {
+    stellarObjectSearchHit.add(createSelfLink(stellarObjectSearchHit.getName()));
   }
 
   private Link createSelfLink(String exoplanetName) {

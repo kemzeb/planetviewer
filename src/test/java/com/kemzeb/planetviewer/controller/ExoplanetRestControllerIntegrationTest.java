@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.kemzeb.planetviewer.dto.ExoplanetDto;
-import com.kemzeb.planetviewer.dto.ExoplanetSearchHit;
 import com.kemzeb.planetviewer.service.ExoplanetService;
 import com.kemzeb.planetviewer.util.PagedModelAssembler;
 import java.util.List;
@@ -33,11 +32,6 @@ public class ExoplanetRestControllerIntegrationTest {
 
     @Bean
     public PagedModelAssembler<ExoplanetDto> exoplanetPagedModelAssembler() {
-      return new PagedModelAssembler<>();
-    }
-
-    @Bean
-    public PagedModelAssembler<ExoplanetSearchHit> documentPagedModelAssembler() {
       return new PagedModelAssembler<>();
     }
   }
