@@ -3,10 +3,10 @@ package com.kemzeb.planetviewer.mapper;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 import com.kemzeb.planetviewer.controller.ExoplanetRestController;
-import com.kemzeb.planetviewer.document.ExoplanetDocument;
 import com.kemzeb.planetviewer.dto.CelestialBodySearchHit;
 import com.kemzeb.planetviewer.dto.ExoplanetDto;
 import com.kemzeb.planetviewer.entity.Exoplanet;
+import com.kemzeb.planetviewer.entity.ExoplanetDocument;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import org.mapstruct.AfterMapping;

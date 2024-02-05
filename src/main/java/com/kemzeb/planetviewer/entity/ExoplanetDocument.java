@@ -1,4 +1,4 @@
-package com.kemzeb.planetviewer.document;
+package com.kemzeb.planetviewer.entity;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -6,31 +6,23 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-/**
- * Represents a document in the "star" index.
- *
- * @see com.kemzeb.planetviewer.entity.Star
- */
-@Document(indexName = "star")
+@Document(indexName = "exoplanet")
 @Data
-public class StarDocument {
+public class ExoplanetDocument {
 
   @Id private String name;
 
   @Field(type = FieldType.Text)
-  private String spectralType;
+  private String stellarHost;
 
-  @Field(type = FieldType.Double)
-  private Double effectiveTemperatureKelvin;
+  @Field(type = FieldType.Text)
+  private String discoveryMethod;
 
-  @Field(type = FieldType.Double)
-  private Double solarRadius;
+  @Field(type = FieldType.Integer)
+  private Integer discoveryYear;
 
-  @Field(type = FieldType.Double)
-  private Double solarMass;
-
-  @Field(type = FieldType.Double)
-  private Double ageGyr;
+  @Field(type = FieldType.Text)
+  private String discoveryFacility;
 
   @Field(type = FieldType.Integer)
   private Integer sysNumStars;

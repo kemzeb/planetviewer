@@ -1,8 +1,8 @@
 package com.kemzeb.planetviewer.service;
 
-import com.kemzeb.planetviewer.document.ExoplanetDocument;
-import com.kemzeb.planetviewer.document.StarDocument;
 import com.kemzeb.planetviewer.dto.CelestialBodySearchHit;
+import com.kemzeb.planetviewer.entity.ExoplanetDocument;
+import com.kemzeb.planetviewer.entity.StarDocument;
 import com.kemzeb.planetviewer.mapper.ExoplanetMapper;
 import com.kemzeb.planetviewer.mapper.StarMapper;
 import jakarta.validation.ValidationException;

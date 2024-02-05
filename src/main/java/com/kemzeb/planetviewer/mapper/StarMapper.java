@@ -4,10 +4,10 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.kemzeb.planetviewer.controller.StarRestController;
-import com.kemzeb.planetviewer.document.StarDocument;
 import com.kemzeb.planetviewer.dto.CelestialBodySearchHit;
 import com.kemzeb.planetviewer.dto.StarDto;
 import com.kemzeb.planetviewer.entity.Star;
+import com.kemzeb.planetviewer.entity.StarDocument;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import org.mapstruct.AfterMapping;
