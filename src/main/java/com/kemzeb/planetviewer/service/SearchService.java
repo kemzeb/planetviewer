@@ -1,8 +1,10 @@
 package com.kemzeb.planetviewer.service;
 
 import com.kemzeb.planetviewer.document.ExoplanetDocument;
+import com.kemzeb.planetviewer.document.StarDocument;
 import com.kemzeb.planetviewer.dto.CelestialBodySearchHit;
 import com.kemzeb.planetviewer.mapper.ExoplanetMapper;
+import com.kemzeb.planetviewer.mapper.StarMapper;
 import jakarta.validation.ValidationException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +24,11 @@ import org.springframework.stereotype.Service;
 public class SearchService {
 
   private static final String TYPE_EXOPLANET = "exoplanet";
+  private static final String TYPE_STAR = "star";
   private static final int MAX_RESULT_WINDOW = 10_000;
   private final SearchOperations searchOperations;
   private final ExoplanetMapper exoplanetMapper;
+  private final StarMapper starMapper;
 
   /**
    * Returns a paginated search result given a query.
@@ -43,6 +47,8 @@ public class SearchService {
       page = searchDefault(pageable, keyword);
     } else if (maybeType.get().equals(TYPE_EXOPLANET)) {
       page = searchForExoplanets(pageable, keyword);
+    } else if (maybeType.get().equals(TYPE_STAR)) {
+      page = searchForStars(pageable, keyword);
     } else {
       throw new ValidationException(
           String.format("\"%s\" is not a valid celestial type.", maybeType.get()));
@@ -70,6 +76,18 @@ public class SearchService {
         SearchHitSupport.searchPageFor(searchHits, query.getPageable());
 
     return searchPage.map(exoplanetMapper::toCelestialBodySearchHit);
+  }
+
+  private Page<CelestialBodySearchHit> searchForStars(Pageable pageable, String keyword) {
+    Criteria criteria = Criteria.where("name").matches(keyword);
+    Query query = new CriteriaQuery(criteria).setPageable(pageable);
+
+    SearchHits<StarDocument> searchHits = searchOperations.search(query, StarDocument.class);
+
+    SearchPage<StarDocument> searchPage =
+        SearchHitSupport.searchPageFor(searchHits, query.getPageable());
+
+    return searchPage.map(starMapper::toCelestialBodySearchHit);
   }
 
   /**

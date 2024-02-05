@@ -13,6 +13,8 @@ import com.kemzeb.planetviewer.service.SearchService;
 import com.kemzeb.planetviewer.util.PagedModelAssembler;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -39,11 +41,11 @@ public class SearchRestControllerIntegrationTest {
   @Autowired private MockMvc mockMvc;
   @MockBean private SearchService searchService;
 
-  @Test
-  public void givenExoplanetType_whenSearching_thenExpect200() throws Exception {
+  @ParameterizedTest
+  @ValueSource(strings = {"exoplanet", "star"})
+  public void givenType_whenSearching_thenExpect200(String type) throws Exception {
     // Given
-    String name = "Novalis";
-    String type = "exoplanet";
+    String name = "Test";
 
     CelestialBodySearchHit searchHit = new CelestialBodySearchHit();
     searchHit.setName(name);

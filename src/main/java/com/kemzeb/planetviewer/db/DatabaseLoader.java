@@ -2,20 +2,22 @@ package com.kemzeb.planetviewer.db;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kemzeb.planetviewer.document.ExoplanetDocument;
 import com.kemzeb.planetviewer.entity.Exoplanet;
 import com.kemzeb.planetviewer.entity.PlanetarySystem;
 import com.kemzeb.planetviewer.entity.Star;
 import com.kemzeb.planetviewer.mapper.ExoplanetMapper;
+import com.kemzeb.planetviewer.mapper.StarMapper;
 import com.kemzeb.planetviewer.repository.ExoplanetDocumentRepository;
 import com.kemzeb.planetviewer.repository.ExoplanetRepository;
 import com.kemzeb.planetviewer.repository.PlanetarySystemRepository;
+import com.kemzeb.planetviewer.repository.StarDocumentRepository;
 import com.kemzeb.planetviewer.repository.StarRepository;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +30,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 @Configuration
 @Transactional
@@ -41,12 +45,14 @@ public class DatabaseLoader {
 
   private final PsArchiveMapper psArchiveMapper;
   private final ExoplanetMapper exoplanetMapper;
+  private final StarMapper starMapper;
   private final ObjectMapper objectMapper;
 
   private final PlanetarySystemRepository planetarySystemRepository;
   private final ExoplanetRepository exoplanetRepository;
   private final StarRepository starRepository;
   private final ExoplanetDocumentRepository exoplanetDocumentRepository;
+  private final StarDocumentRepository starDocumentRepository;
 
   @Bean
   CommandLineRunner initDatabase() {
@@ -149,16 +155,25 @@ public class DatabaseLoader {
     logger.info("Finished deleting old documents from ElasticSearch.");
     logger.info("Creating new documents for ElasticSearch...");
 
-    Page<Exoplanet> page = exoplanetRepository.findAll(PageRequest.of(0, 64));
-
-    do {
-      List<ExoplanetDocument> exoplanetDocuments =
-          page.getContent().stream().map(exoplanetMapper::toExoplanetDocument).toList();
-
-      exoplanetDocumentRepository.saveAll(exoplanetDocuments);
-      page = exoplanetRepository.findAll(page.nextPageable());
-    } while (page.hasNext());
+    buildIndex(
+        exoplanetRepository, exoplanetDocumentRepository, exoplanetMapper::toExoplanetDocument);
+    buildIndex(starRepository, starDocumentRepository, starMapper::toStarDocument);
 
     logger.info("Finished creating new documents for ElasticSearch.");
+  }
+
+  private <V, T> void buildIndex(
+      JpaRepository<V, ?> jpaRepository,
+      ElasticsearchRepository<T, ?> esRepository,
+      Function<V, T> mapper) {
+
+    Page<V> page = jpaRepository.findAll(PageRequest.of(0, 64));
+
+    do {
+      List<T> documents = page.getContent().stream().map(mapper).toList();
+
+      esRepository.saveAll(documents);
+      page = jpaRepository.findAll(page.nextPageable());
+    } while (page.hasNext());
   }
 }
