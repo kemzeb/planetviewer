@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(headers, HttpStatus.FOUND);
   }
 
-  @ExceptionHandler(ValidationException.class)
+  @ExceptionHandler({ValidationException.class, SearchFilterParseException.class})
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   String handleBadRequest(ValidationException ex) {
     return ex.getMessage();
