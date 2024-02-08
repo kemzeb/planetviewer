@@ -7,6 +7,7 @@ import com.kemzeb.planetviewer.exoplanet.dto.ExoplanetDto;
 import com.kemzeb.planetviewer.exoplanet.entity.Exoplanet;
 import com.kemzeb.planetviewer.exoplanet.entity.ExoplanetDocument;
 import com.kemzeb.planetviewer.search.dto.CelestialBodySearchHit;
+import com.kemzeb.planetviewer.star.controller.StarRestController;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import org.mapstruct.AfterMapping;
@@ -35,17 +36,23 @@ public abstract class ExoplanetMapper {
       SearchHit<ExoplanetDocument> searchHit);
 
   @AfterMapping
-  void addSelfLinkRelation(@MappingTarget ExoplanetDto exoplanetDto) {
+  void addLinkRelations(@MappingTarget ExoplanetDto exoplanetDto) {
     exoplanetDto.add(createSelfLink(exoplanetDto.getName()));
+    exoplanetDto.add(createStarLink(exoplanetDto.getHostName()));
   }
 
   @AfterMapping
-  void addSelfLinkRelation(@MappingTarget CelestialBodySearchHit stellarObjectSearchHit) {
-    stellarObjectSearchHit.add(createSelfLink(stellarObjectSearchHit.getName()));
+  void addLinkRelations(@MappingTarget CelestialBodySearchHit searchHit) {
+    searchHit.add(createSelfLink(searchHit.getName()));
   }
 
   private Link createSelfLink(String exoplanetName) {
-    String encodedName = URLEncoder.encode(exoplanetName, Charset.defaultCharset());
-    return linkTo(ExoplanetRestController.class).slash(encodedName).withSelfRel();
+    String encoded = URLEncoder.encode(exoplanetName, Charset.defaultCharset());
+    return linkTo(ExoplanetRestController.class).slash(encoded).withSelfRel();
+  }
+
+  private Link createStarLink(String stellarHost) {
+    String encoded = URLEncoder.encode(stellarHost, Charset.defaultCharset());
+    return linkTo(StarRestController.class).slash(encoded).withRel("star");
   }
 }
