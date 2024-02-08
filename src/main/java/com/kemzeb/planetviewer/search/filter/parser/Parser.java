@@ -78,7 +78,7 @@ public class Parser {
       throw new SearchFilterParseException("Cannot have an operator with a STRING operand.");
     }
 
-    builder.literal(consume().value());
+    builder.value(consume().value());
 
     return builder.build();
   }

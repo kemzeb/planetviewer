@@ -25,6 +25,9 @@ public abstract class StarMapper {
 
   public abstract StarDto toStarDto(Star star);
 
+  @Mapping(source = "planetarySystem.numStars", target = "sysNumStars")
+  @Mapping(source = "planetarySystem.numPlanets", target = "sysNumPlanets")
+  @Mapping(source = "planetarySystem.numMoons", target = "sysNumMoons")
   public abstract StarDocument toStarDocument(Star star);
 
   @Mapping(source = "score", target = "hitScore")

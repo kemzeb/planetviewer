@@ -51,7 +51,7 @@ public class SearchRestControllerIntegrationTest {
     searchHit.setName(name);
 
     // When
-    when(searchService.search(any(), eq(name), any()))
+    when(searchService.search(any(), eq(name), any(), any()))
         .thenReturn(new PageImpl<>(List.of(searchHit)));
 
     // Then
@@ -82,7 +82,7 @@ public class SearchRestControllerIntegrationTest {
     Page<CelestialBodySearchHit> page = new PageImpl<>(List.of(), pageable, 64L);
 
     // When
-    when(searchService.search(any(), any(), any())).thenReturn(page);
+    when(searchService.search(any(), any(), any(), any())).thenReturn(page);
 
     // Then
     mockMvc

@@ -3,9 +3,14 @@ package com.kemzeb.planetviewer.search.service;
 import com.kemzeb.planetviewer.exoplanet.entity.ExoplanetDocument;
 import com.kemzeb.planetviewer.exoplanet.mapper.ExoplanetMapper;
 import com.kemzeb.planetviewer.search.dto.CelestialBodySearchHit;
+import com.kemzeb.planetviewer.search.filter.exoplanet.CriteriaBuilderStrategy;
+import com.kemzeb.planetviewer.search.filter.exoplanet.ExoplanetCriteriaBuilderStrategy;
+import com.kemzeb.planetviewer.search.filter.exoplanet.StarCriteriaBuilderStrategy;
+import com.kemzeb.planetviewer.search.filter.parser.ParsedFilter;
 import com.kemzeb.planetviewer.star.entity.StarDocument;
 import com.kemzeb.planetviewer.star.mapper.StarMapper;
 import jakarta.validation.ValidationException;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,7 +42,7 @@ public class SearchService {
    *     exceeds ElasticSearch's max result window limit.
    */
   public Page<CelestialBodySearchHit> search(
-      Pageable pageable, String keyword, Optional<String> maybeType) {
+      Pageable pageable, String keyword, List<ParsedFilter> filters, Optional<String> maybeType) {
 
     throwIfPageableExceedsMaxResultWindow(pageable);
 
@@ -46,9 +51,9 @@ public class SearchService {
     if (maybeType.isEmpty()) {
       page = searchDefault(pageable, keyword);
     } else if (maybeType.get().equals(TYPE_EXOPLANET)) {
-      page = searchForExoplanets(pageable, keyword);
+      page = searchForExoplanets(pageable, keyword, filters);
     } else if (maybeType.get().equals(TYPE_STAR)) {
-      page = searchForStars(pageable, keyword);
+      page = searchForStars(pageable, keyword, filters);
     } else {
       throw new ValidationException(
           String.format("\"%s\" is not a valid celestial type.", maybeType.get()));
@@ -62,11 +67,14 @@ public class SearchService {
    * {@link ExoplanetDocument}'s index.
    */
   private Page<CelestialBodySearchHit> searchDefault(Pageable pageable, String keyword) {
-    return searchForExoplanets(pageable, keyword);
+    return searchForExoplanets(pageable, keyword, List.of());
   }
 
-  private Page<CelestialBodySearchHit> searchForExoplanets(Pageable pageable, String keyword) {
-    Criteria criteria = Criteria.where("name").matches(keyword);
+  private Page<CelestialBodySearchHit> searchForExoplanets(
+      Pageable pageable, String keyword, List<ParsedFilter> filters) {
+
+    CriteriaBuilderStrategy builder = new ExoplanetCriteriaBuilderStrategy();
+    Criteria criteria = builder.buildCriteria(keyword, filters);
     Query query = new CriteriaQuery(criteria).setPageable(pageable);
 
     SearchHits<ExoplanetDocument> searchHits =
@@ -78,8 +86,11 @@ public class SearchService {
     return searchPage.map(exoplanetMapper::toCelestialBodySearchHit);
   }
 
-  private Page<CelestialBodySearchHit> searchForStars(Pageable pageable, String keyword) {
-    Criteria criteria = Criteria.where("name").matches(keyword);
+  private Page<CelestialBodySearchHit> searchForStars(
+      Pageable pageable, String keyword, List<ParsedFilter> filters) {
+
+    CriteriaBuilderStrategy builder = new StarCriteriaBuilderStrategy();
+    Criteria criteria = builder.buildCriteria(keyword, filters);
     Query query = new CriteriaQuery(criteria).setPageable(pageable);
 
     SearchHits<StarDocument> searchHits = searchOperations.search(query, StarDocument.class);

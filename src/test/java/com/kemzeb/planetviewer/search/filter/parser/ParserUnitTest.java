@@ -22,7 +22,7 @@ public class ParserUnitTest {
     // Then
     assertEquals("field", result.field());
     assertEquals(Operator.LESS_THAN, result.operator());
-    assertEquals("29", result.literal());
+    assertEquals("29", result.value());
   }
 
   @Test
@@ -37,7 +37,7 @@ public class ParserUnitTest {
     // Then
     assertEquals("field", result.field());
     assertEquals(Operator.NONE, result.operator());
-    assertEquals("29.22", result.literal());
+    assertEquals("29.22", result.value());
   }
 
   @Test
@@ -52,7 +52,7 @@ public class ParserUnitTest {
     // Then
     assertEquals("field", result.field());
     assertEquals(Operator.NONE, result.operator());
-    assertEquals("What is a    Lombax?", result.literal());
+    assertEquals("What is a    Lombax?", result.value());
   }
 
   @ParameterizedTest

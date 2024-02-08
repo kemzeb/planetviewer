@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.kemzeb.planetviewer.exoplanet.mapper.ExoplanetMapper;
 import jakarta.validation.ValidationException;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +32,8 @@ public class SearchServiceUnitTest {
     // When
     // Then
     assertThrows(
-        ValidationException.class, () -> underTest.search(pageable, "test", Optional.empty()));
+        ValidationException.class,
+        () -> underTest.search(pageable, "test", List.of(), Optional.empty()));
   }
 
   @Test
@@ -44,6 +46,6 @@ public class SearchServiceUnitTest {
     // Then
     assertThrows(
         ValidationException.class,
-        () -> underTest.search(pageable, "test", Optional.of("invalid")));
+        () -> underTest.search(pageable, "test", List.of(), Optional.of("invalid")));
   }
 }

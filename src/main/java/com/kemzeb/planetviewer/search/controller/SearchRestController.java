@@ -5,9 +5,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.kemzeb.planetviewer.exception.PageNumberOutOfBoundsException;
 import com.kemzeb.planetviewer.search.dto.CelestialBodySearchHit;
+import com.kemzeb.planetviewer.search.filter.parser.ParsedFilter;
+import com.kemzeb.planetviewer.search.filter.parser.Parser;
 import com.kemzeb.planetviewer.search.service.SearchService;
 import com.kemzeb.planetviewer.util.Constants;
 import com.kemzeb.planetviewer.util.PagedModelAssembler;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,10 +30,10 @@ public class SearchRestController {
   private final SearchService searchService;
   private final PagedModelAssembler<CelestialBodySearchHit> pagedModelAssembler;
 
-  // TODO: Take an optional filters param and build a representation that the service can use.
   @GetMapping("/search")
   public PagedModel<CelestialBodySearchHit> search(
       @RequestParam("q") String query,
+      @RequestParam(name = "filters") Optional<List<String>> maybeFilters,
       @RequestParam("type") Optional<String> maybeType,
       @RequestParam("page") Optional<Integer> maybePage,
       UriComponentsBuilder builder) {
@@ -43,8 +46,12 @@ public class SearchRestController {
       throw new PageNumberOutOfBoundsException(redirectUrl);
     }
 
+    List<ParsedFilter> parsedFilters =
+        maybeFilters.orElse(List.of()).stream().map(filter -> new Parser(filter).parse()).toList();
+
     Pageable pageable = PageRequest.of(pageNumber, Constants.DEFAULT_PAGE_SIZE);
-    Page<CelestialBodySearchHit> page = searchService.search(pageable, query, maybeType);
+    Page<CelestialBodySearchHit> page =
+        searchService.search(pageable, query, parsedFilters, maybeType);
 
     if (page.getTotalPages() > 0 && (page.getNumber() >= page.getTotalPages())) {
       Integer lastPageNumber = page.getTotalPages() - 1;
@@ -53,7 +60,8 @@ public class SearchRestController {
     }
 
     Link selfLink =
-        linkTo(methodOn(getClass()).search(query, maybeType, Optional.empty(), null)).withSelfRel();
+        linkTo(methodOn(getClass()).search(query, maybeFilters, maybeType, Optional.empty(), null))
+            .withSelfRel();
 
     return pagedModelAssembler.toModel(page, selfLink);
   }
@@ -61,6 +69,7 @@ public class SearchRestController {
   private String buildRedirectUrl(
       UriComponentsBuilder builder, String query, Optional<String> maybeType, Integer pageNumber) {
     return builder
+        .path("/search")
         .queryParam("q", query)
         .queryParamIfPresent("type", maybeType)
         .queryParam("page", pageNumber)

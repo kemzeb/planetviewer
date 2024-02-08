@@ -26,7 +26,7 @@ public class RootRestController {
     dto.add(
         linkTo(
                 methodOn(SearchRestController.class)
-                    .search("", Optional.empty(), Optional.empty(), null))
+                    .search("", Optional.empty(), Optional.empty(), Optional.empty(), null))
             .withRel("search"));
     dto.add(linkTo(methodOn(RootRestController.class).listAllLinks()).withSelfRel());
 
