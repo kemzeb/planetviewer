@@ -1,4 +1,4 @@
-package com.kemzeb.planetviewer.search.filter.exoplanet;
+package com.kemzeb.planetviewer.search.filter;
 
 import com.kemzeb.planetviewer.search.filter.parser.Operator;
 import com.kemzeb.planetviewer.search.filter.parser.ParsedFilter;
