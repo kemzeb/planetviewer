@@ -210,7 +210,11 @@ public class Lexer {
 
   /** Transition to the STRING state. */
   private TransitionResult transitionToString() {
-    // FIXME: Handle EOF.
+    if (isEof()) {
+      // We didn't consume another double quote. This is erroneous input, but we can just consider
+      // it as a TEXT token and let the parser do the work of throwing an exception.
+      return new TransitionResult(Optional.empty(), State.START);
+    }
 
     if (peekIs('"')) {
       Token token = new Token(Type.STRING, stateBuffer.toString());

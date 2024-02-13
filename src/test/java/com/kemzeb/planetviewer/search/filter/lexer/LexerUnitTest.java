@@ -39,6 +39,19 @@ public class LexerUnitTest {
     assertEquals("this is a string", token.value());
   }
 
+  @Test
+  public void givenStringNotDelimitedByDoubleQuote_whenCallingNextToken_thenReturnTextToken() {
+    // Given
+    Lexer lexer = new Lexer("\"this is a string");
+
+    // When
+    Token token = lexer.nextToken();
+
+    // Then
+    assertEquals(Type.TEXT, token.type());
+    assertEquals("this is a string", token.value());
+  }
+
   @ParameterizedTest
   @MethodSource("validOperatorsProvider")
   public void givenValidOperators_whenCallingNextToken_thenExpectTheyAreValid(
