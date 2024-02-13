@@ -9,8 +9,8 @@ It does have duplicate rows for each exoplanet (as each row represents a publica
 the duplicate rows, but give precendence to the row that the Archive flagged as the "default" row. From the looks of it, there does seem to be limitation with this table; I don't have a way of uniquely identifying a planetary system, unlike the Overview service. From reading the description of this service, it seem to draw its data from its "own list of cross-identifications for every star and planet in its database" that doesn't seem to be accessible to the public.
 
 ## Todo
-- [ ] Implement an endpoint for searching for stars
-- [ ] Refine and add additional filtering capabilites for the search endpoint
+- [x] Implement an endpoint for searching for planets and stars
+- [x] Add filtering capabilites for the search endpoint
 - [ ] Implement a production environment that users can run (instead of using the dev environment) using containers (via Docker Compose)
 - [ ] Design and implement an Angular client that consumes the RESTful service such that it can search for and provide an visual overview for any exoplanet or star.
 
