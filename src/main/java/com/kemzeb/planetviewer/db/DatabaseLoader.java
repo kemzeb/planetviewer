@@ -30,6 +30,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
@@ -55,6 +56,8 @@ public class DatabaseLoader {
   private final StarRepository starRepository;
   private final ExoplanetDocumentRepository exoplanetDocumentRepository;
   private final StarDocumentRepository starDocumentRepository;
+
+  private final TaskExecutor taskExecutor;
 
   @Bean
   CommandLineRunner initDatabase() {
@@ -153,15 +156,31 @@ public class DatabaseLoader {
     logger.info("Deleting old documents from ElasticSearch...");
 
     exoplanetDocumentRepository.deleteAll();
+    starDocumentRepository.deleteAll();
 
     logger.info("Finished deleting old documents from ElasticSearch.");
     logger.info("Creating new documents for ElasticSearch...");
 
-    buildIndex(
-        exoplanetRepository, exoplanetDocumentRepository, exoplanetMapper::toExoplanetDocument);
-    buildIndex(starRepository, starDocumentRepository, starMapper::toStarDocument);
+    taskExecutor.execute(
+        new Runnable() {
+          @Override
+          public void run() {
+            buildIndex(
+                exoplanetRepository,
+                exoplanetDocumentRepository,
+                exoplanetMapper::toExoplanetDocument);
+            logger.info("Finished building exoplanet index.");
+          }
+        });
 
-    logger.info("Finished creating new documents for ElasticSearch.");
+    taskExecutor.execute(
+        new Runnable() {
+          @Override
+          public void run() {
+            buildIndex(starRepository, starDocumentRepository, starMapper::toStarDocument);
+            logger.info("Finished building star index.");
+          }
+        });
   }
 
   private <V, T> void buildIndex(
