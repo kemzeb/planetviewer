@@ -24,6 +24,11 @@
             "name": "planetviewer.elasticsearch.password",
             "type": "java.lang.String",
             "description": "Password to ElasticSearch infrastructure."
+        },
+        {
+            "name": "planetviewer.app-data-dir",
+            "type": "java.lang.String",
+            "description": "Data directory for planetviewer (e.g. ps.json)"
         }
     ]
 }

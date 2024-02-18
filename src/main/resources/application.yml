@@ -13,6 +13,7 @@ server:
   servlet:
     context-path: /api
 planetviewer:
+    app-data-dir: ${APP_DATA_DIR}
     should-cli-runner-run: true
     elasticsearch:
         host: ${ELASTIC_HOST}

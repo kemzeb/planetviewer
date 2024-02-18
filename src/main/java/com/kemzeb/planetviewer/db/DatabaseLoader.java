@@ -16,25 +16,31 @@ import com.kemzeb.planetviewer.system.entity.PlanetarySystem;
 import com.kemzeb.planetviewer.system.repo.PlanetarySystemRepository;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Configuration
 @Transactional
@@ -42,7 +48,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 @RequiredArgsConstructor
 public class DatabaseLoader {
 
-  private static final String planetarySystemArchiveFilename = "ps.json";
+  private static final String PS_ARCHIVE_FILENAME = "ps.json";
+  private static final String PS_ARCHIVE_URI = "https://exoplanetarchive.ipac.caltech.edu";
+  private static final String PS_ARCHIVE_URI_PATH = "/TAP/sync";
+
+  @Value("${planetviewer.app-data-dir}")
+  private String appDataDirPath;
 
   private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -68,15 +79,16 @@ public class DatabaseLoader {
   }
 
   private void buildTables() {
+    // TODO: This is not the best way to determine if we need to rebuild the tables.
+    // What if we stop the server before we finish adding all the necessary rows?
     if (starRepository.count() > 0) {
       return;
     }
 
     logger.info("Initializing PostgreSQL database...");
 
-    ResourceLoader resourceLoader = new DefaultResourceLoader();
-    Resource resource = resourceLoader.getResource("classpath:" + planetarySystemArchiveFilename);
-    String content = tryToStringifyResource(resource);
+    String content = tryToGetArchiveContent();
+
     List<PsArchive> systemArchives =
         tryToParseJson(content, new TypeReference<List<PsArchive>>() {});
 
@@ -140,15 +152,55 @@ public class DatabaseLoader {
     }
   }
 
-  private String tryToStringifyResource(Resource resource) {
+  private String tryToGetArchiveContent() {
     try {
-      return resource.getContentAsString(Charset.defaultCharset());
-    } catch (IOException ex) {
-      throw new RuntimeException(ex);
-    } catch (NullPointerException ex) {
-      throw new RuntimeException(
-          "Database cannot be initalized because there's no ps.json in the resource/ directory."
-              + " Please run scripts/archive-fetch.sh.");
+      return Files.readString(
+          Paths.get(String.format("%s/%s", appDataDirPath, PS_ARCHIVE_FILENAME)));
+    } catch (NoSuchFileException e) {
+      logger.info("PS table not stored locally. Fetching from " + PS_ARCHIVE_URI + "...");
+
+      Path path = tryToFetchPsArchive();
+
+      logger.info(
+          String.format("Finished fetching PS table. Stored at %s.", path.toAbsolutePath()));
+
+      try {
+        return Files.readString(path);
+      } catch (IOException ioException) {
+        throw new RuntimeException(ioException);
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private Path tryToFetchPsArchive() {
+    HttpClient httpClient = HttpClient.newHttpClient();
+    try {
+      URI uri =
+          UriComponentsBuilder.fromUriString(PS_ARCHIVE_URI)
+              .path(PS_ARCHIVE_URI_PATH)
+              .queryParam(
+                  "query",
+                  "select+default_flag,pl_name,hostname,sy_snum,"
+                      + "sy_pnum,sy_mnum,discoverymethod,disc_year,"
+                      + "disc_facility,pl_orbper,pl_rade,pl_bmasse,pl_eqt,st_spectype"
+                      + ",st_teff,st_rad,st_mass,st_age,sy_dist,glat,glon+from+ps")
+              .queryParam("format", "json")
+              .build()
+              .toUri();
+
+      HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
+
+      HttpResponse<Path> response =
+          httpClient.send(
+              request,
+              HttpResponse.BodyHandlers.ofFile(
+                  Path.of(String.format("%s/%s", appDataDirPath, PS_ARCHIVE_FILENAME))));
+
+      return response.body();
+    } catch (IOException | InterruptedException e) {
+      throw new RuntimeException(e);
     }
   }
 

@@ -8,18 +8,19 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
-    environment:
-      # NOTE: POSTGRES_* should match values in db container
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_URL: jdbc:postgresql://db:5432/planetviewer
-
-      # NOTE: ELASTIC_* should match values in elasticsearch container
-      ELASTIC_HOST: elasticsearch
-      ELASTIC_PORT: 9200
     volumes:
       - ../..:/workspaces:cached
+    environment:
+      APP_DATA_DIR: /workspaces/planetviewer
+
+      # NOTE: POSTGRES_* should match values in db container
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_URL: jdbc:postgresql://db:5432/planetviewer
+
+      ELASTIC_HOST: elasticsearch
+      ELASTIC_PORT: 9200
+
     depends_on:
       - db
       - elasticsearch
@@ -34,8 +35,8 @@ services:
       - postgres-data:/var/lib/postgresql/data
     environment:
       # NOTE: POSTGRES_USER/PASSWORD should match values in app container
-      POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: planetviewer
 
   elasticsearch:
@@ -44,6 +45,5 @@ services:
     environment:
       # NOTE: This environment variable disables security entirely. Don't do this in production.
       - xpack.security.enabled=false
-
       # Form a single-node cluster.
       - discovery.type=single-node

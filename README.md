@@ -19,18 +19,10 @@ the duplicate rows, but give precendence to the row that the Archive flagged as 
 ## Usage
 There isn't a production environment that you can use yet, but you can run this app using the development environment by hopping on VSCode and taking advantage of the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension.
 
-Once you fired up the dev environment, execute the following in your shell:
-1. Fetch the data from the NASA Exoplanet Archive's TAP service by running the following script in the project's root directory:
-
-`sh scripts/archive-fetch.sh`
-
-2. Perform the necessary code generation for the MapStruct and Lombok code generators by doing the following:
-
-`mvn clean install`
-
-3. Run the Spring Boot app using its "run" Maven goal:
-
-`mvn spring-boot:run`
+Once you fired up the dev environment, execute the following in your shell (note that this will download the PS table from the Exoplanet Archive if it doesn't already exist in the project root directory):
+```console
+mvn spring-boot:run
+```
 
 This should fire up a RESTful HTTP server for you to communicate with (using any HTTP client such as `curl`, `wget`, `Postman`). Use `http://localhost:8080/api/` to see what endpoints are available!
 
