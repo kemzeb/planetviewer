@@ -74,10 +74,6 @@ public class Parser {
           String.format("Expected an INTEGER, DECIMAL, or STRING, got \"%s\"", peek().type()));
     }
 
-    if (peekIs(Token.Type.TEXT) && op == Operator.NONE) {
-      throw new SearchFilterParseException("Cannot have an operator with a STRING operand.");
-    }
-
     builder.value(consume().value());
 
     return builder.build();
