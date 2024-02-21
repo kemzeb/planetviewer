@@ -1,0 +1,6 @@
+instances:
+  - name: es
+    dns:
+      # "es" represents the Docker DNS server name.
+      - es
+      - localhost

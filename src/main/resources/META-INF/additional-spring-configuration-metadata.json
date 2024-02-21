@@ -29,6 +29,11 @@
             "name": "planetviewer.app-data-dir",
             "type": "java.lang.String",
             "description": "Data directory for planetviewer (e.g. ps.json)"
+        },
+        {
+            "name": "planetviewer.elasticsearch.ca-cert-path",
+            "type": "java.lang.String",
+            "description": "Path to Elasticsearch's CA certificate."
         }
     ]
 }

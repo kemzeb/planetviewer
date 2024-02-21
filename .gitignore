@@ -1,8 +1,12 @@
+.env
 HELP.md
 target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 **/ps.json
+
+### MacOS ###
+**/.DS_Store
 
 ### STS ###
 .apt_generated

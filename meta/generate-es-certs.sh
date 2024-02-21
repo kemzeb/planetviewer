@@ -1,0 +1,1 @@
+docker-compose -f meta/elasticsearch/create-certs.yml run --rm create_es_certs

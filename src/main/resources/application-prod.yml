@@ -1,0 +1,23 @@
+spring:
+    datasource:
+        url: ${POSTGRES_URL}
+        username: ${POSTGRES_USER}
+        password: ${POSTGRES_PASSWORD}
+    jpa:
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.PostgreSQLDialect
+server:
+    servlet:
+        context-path: /api
+planetviewer:
+    should-cli-runner-run: true
+    app-data-dir: ${APP_DATA_DIR}
+    elasticsearch:
+        host: ${ELASTIC_HOST}
+        port: ${ELASTIC_PORT}
+        username: ${ELASTIC_USERNAME}
+        password: ${ELASTIC_PASSWORD}
+        ca-cert-path: ${ELASTIC_CA_CERT_PATH}

@@ -1,0 +1,31 @@
+# Adapted from https://www.elastic.co/guide/en/elasticsearch/reference/7.17/configuring-tls-docker.html
+# This generates certs for all Elasticsearch instances defined in instances.yml.
+version: "3.8"
+
+services:
+  create_es_certs:
+    container_name: create_es_certs
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
+    # This generates both the CA cert/CA private key and the instance-specific certs.
+    # TODO: Add a password for the CA cert.
+    command: >
+      bash -c '
+        if [[ ! -f /certs/bundle.zip ]]; then
+          echo /certs/ca.zip | bin/elasticsearch-certutil ca --days 365 --pem;
+          unzip /certs/ca.zip -d /certs;
+          bin/elasticsearch-certutil cert --silent --pem --ca-cert /certs/ca/ca.crt --ca-key /certs/ca/ca.key \
+            --in config/certs/instances.yml -out /certs/bundle.zip;
+          unzip /certs/bundle.zip -d /certs;
+        fi
+        chown -R 1000:0 /certs
+      '
+    user: "0"
+    working_dir: /usr/share/elasticsearch
+    volumes:
+      - es-certs:/certs
+      - ./:/usr/share/elasticsearch/config/certs
+
+volumes:
+  es-certs:
+    driver: local
+    name: es-certs

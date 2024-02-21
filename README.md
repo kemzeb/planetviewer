@@ -11,18 +11,18 @@ the duplicate rows, but give precendence to the row that the Archive flagged as 
 ## Todo
 - [x] Implement an endpoint for searching for planets and stars
 - [x] Add filtering capabilites for the search endpoint
-- [ ] Implement a production environment that users can run (instead of using the dev environment) using containers (via Docker Compose)
+- [x] Implement a production environment that users can run (instead of using the dev environment) using containers (via Docker Compose)
 - [ ] Design and implement an Angular client that consumes the RESTful service such that it can search for and provide an visual overview for any exoplanet or star.
 
 ... and more too come
 
 ## Usage
-There isn't a production environment that you can use yet, but you can run this app using the development environment by hopping on VSCode and taking advantage of the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension.
+***NOTE:*** (The following command requires Docker and a Unix-based system to run!)
 
-Once you fired up the dev environment, execute the following in your shell (note that this will download the PS table from the Exoplanet Archive if it doesn't already exist in the project root directory):
+To run it, use the following command in the project's root directory:
 ```console
-mvn spring-boot:run
+sh meta/run.sh
 ```
 
-This should fire up a RESTful HTTP server for you to communicate with (using any HTTP client such as `curl`, `wget`, `Postman`). Use `http://localhost:8080/api/` to see what endpoints are available!
+After some time fetching the PS table from the Exoplanet Archive, building the PostgreSQL database, and building the Elasticsearch indices, it should fire up a RESTful HTTP server for you to communicate with (using your favorite HTTP client such as `curl`, `wget`, `Postman`). Use `http://localhost:8080/api/` to see what endpoints are available!
 
