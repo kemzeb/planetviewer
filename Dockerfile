@@ -65,6 +65,10 @@ RUN adduser \
     --no-create-home \
     --uid "${UID}" \
     appuser
+# Create and set the permissions for the site data directory. Wierdly enough we don't need this for
+# MacOS as it seems to automatically set the perms to be that of appuser. On Windows, however, does
+# not give ownership of the /data directory to appuser, leading to permission denied errors.
+RUN mkdir -p /usr/local/planetviewer/data && chown appuser /usr/local/planetviewer/data
 USER appuser
 
 # Copy layers from the "extract" stage.

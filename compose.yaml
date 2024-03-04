@@ -7,7 +7,7 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - ./meta:/usr/local/planetviewer/data
+      - ps-archive-data:/usr/local/planetviewer/data
       - es-certs:/usr/local/planetviewer/certs
     environment:
       - APP_DATA_DIR=/usr/local/planetviewer/data
@@ -37,14 +37,22 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     environment:
-    # More info: https://github.com/docker-library/docs/blob/master/postgres/README.md
+      # More info: https://github.com/docker-library/docs/blob/master/postgres/README.md
       - POSTGRES_DB=planetviewer
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     expose:
       - 5432
     healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "planetviewer"]
+      test:
+        [
+          "CMD",
+          "pg_isready",
+          "-U",
+          "${POSTGRES_USER}",
+          "-d",
+          "planetviewer"
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -70,12 +78,22 @@ services:
     expose:
       - 9200
     healthcheck:
-      test: ["CMD", "curl", "-f", "-k", "-u", "elastic:${ELASTIC_PASSWORD}", "https://localhost:9200/_cluster/health"]
+      test:
+        [
+          "CMD",
+          "curl",
+          "-f",
+          "-k",
+          "-u",
+          "elastic:${ELASTIC_PASSWORD}",
+          "https://localhost:9200/_cluster/health"
+        ]
       interval: 16s
       timeout: 10s
       retries: 5
 
 volumes:
+  ps-archive-data:
   db-data:
   es-data:
   es-certs:
