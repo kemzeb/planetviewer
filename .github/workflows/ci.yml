@@ -14,8 +14,9 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      ELASTIC_HOST: elasticsearch
+      ELASTIC_HOST: localhost
       ELASTIC_PORT: 9200
+
     services:
       elasticsearch:
         image: elasticsearch:8.12.0
