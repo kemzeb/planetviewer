@@ -1,0 +1,36 @@
+# This workflow will test a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+
+name: Lint and test backend
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  lint-and-test-backend:
+
+    runs-on: ubuntu-latest
+    services:
+      elasticsearch:
+        image: elasticsearch:8.12.0
+        env:
+          discovery.type: single-node
+          xpack.security.enabled: false
+          ELASTIC_HOST: elasticsearch
+          ELASTIC_PORT: 9200
+        ports:
+          - "9200:9200"
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 21
+      uses: actions/setup-java@v3
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven
+    - name: Lint and test with Maven
+      run: mvn --batch-mode test
