@@ -13,14 +13,15 @@ jobs:
   lint-and-test-backend:
 
     runs-on: ubuntu-latest
+    env:
+      ELASTIC_HOST: elasticsearch
+      ELASTIC_PORT: 9200
     services:
       elasticsearch:
         image: elasticsearch:8.12.0
         env:
           discovery.type: single-node
           xpack.security.enabled: false
-          ELASTIC_HOST: elasticsearch
-          ELASTIC_PORT: 9200
         ports:
           - "9200:9200"
 
