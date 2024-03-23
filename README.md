@@ -1,6 +1,6 @@
 # planetviewer
 
-A fun, hobby full-stack alternative to NASA Exoplanet Archive's [Overview service](https://exoplanetarchive.ipac.caltech.edu/overview), which provides search and data overview capabilities for exoplanets and stars.
+A fun, hobby backend alternative to NASA Exoplanet Archive's [Overview service](https://exoplanetarchive.ipac.caltech.edu/overview), which provides search and data overview capabilities for exoplanets and stars.
 
 This project exists for me to explore the realm of astronomy, all in the while building a full-stack web application that has me work with technologies I am interested in learning/reviewing.
 
